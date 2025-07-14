@@ -1,0 +1,24 @@
+---
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: myreplicaset
+  labels:
+    app: myapp
+    key: webserver
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      key: webserver
+  template:
+    metadata: 
+      labels: 
+        key: webserver
+    spec:
+      containers:
+        - name: myapp
+          image: httpd
+            # ports:
+            # - containerPort: 80
+              # hostPort: 9090

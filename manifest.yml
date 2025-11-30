@@ -1,0 +1,12 @@
+---
+apiVersion: v1
+kind: Pod
+metadata: 
+  name: nginx-pod # Corrected typo for consistency
+  labels:
+    type: frontend-server
+    author: cicdclouds
+spec:
+  containers: # Corrected to plural 'containers'
+    - name: mynginx
+      image: nginx

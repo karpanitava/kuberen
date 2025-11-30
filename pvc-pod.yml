@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: Pod # Corrected: 'Pod' is the correct kind for a Kubernetes Pod
+metadata:
+  name: test-pod-volumes
+  labels:
+    type: frontend-nginx
+    author: cicdclouds
+spec:
+  containers: # Corrected: 'containers' (plural) is used for defining containers
+    - name: test-pod-volumes # This defines the first (and only) container
+      image: nginx
+      ports:
+        - containerPort: 90
+          hostPort: 9090 # Note: hostPort can lead to port conflicts and is generally discouraged for production. Consider using a Kubernetes Service instead.
+      volumeMounts: # Corrected: 'volumeMounts' (plural) and properly nested under the container
+        - name: test-pv-storage
+          mountPath: /usr/share/nginx/html
+  volumes: # This section correctly defines the volumes available to the Pod
+    - name: test-pv-storage
+      persistentVolumeClaim:
+        claimName: test-pv-claim
+
+    
+

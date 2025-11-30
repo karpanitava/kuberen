@@ -1,0 +1,32 @@
+---
+apiVersion: v1
+kind: Service
+metadata: 
+  name: pods_service
+  labels:
+   type: pods_service
+spec:
+  ports:
+    - targetPort: 3306
+      port: 3306
+  selector: database
+
+---
+apiVersion: v1
+kind: Pod 
+metadata: 
+  name: database
+  labels:
+   tier: database
+   author: cicdclouds
+spec:
+  containers: 
+    - name: database
+      image: mysql
+      env:
+       - name: MYSQL_USER
+         value: hari
+       - name: MYSQL_ROOT_PASSWORD
+         value: XXXXXX
+      
+         

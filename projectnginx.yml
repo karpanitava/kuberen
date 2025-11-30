@@ -1,0 +1,57 @@
+# mysql-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment # For production, consider StatefulSet for MySQL
+metadata:
+  name: mysql-db
+  labels:
+    app: mysql
+spec:
+  replicas: 1 # Typically 1 for a simple MySQL, or more for replication setups
+  selector:
+    matchLabels:
+      app: mysql
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      containers:
+        - name: mysql
+          image: mysql:8.0 # Use a specific version
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secret # Reference a Kubernetes Secret for password
+                  key: password
+          ports:
+            - containerPort: 3306
+          volumeMounts:
+            - name: mysql-persistent-storage
+              mountPath: /var/lib/mysql # Where MySQL stores its data
+      volumes:
+        - name: mysql-persistent-storage
+          persistentVolumeClaim:
+            claimName: mysql-pv-claim # Link to a PersistentVolumeClaim
+---
+# mysql-secret.yaml (Create this first for the password)
+apiVersion: v1
+kind: Secret
+metadata:
+  name: mysql-secret
+stringData:
+  password: your_secure_password # Change this to a strong password
+---
+# mysql-pvc.yaml (For persistent storage)
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mysql-pv-claim
+spec:
+  accessModes:
+    - ReadWriteOnce # Can be mounted as read-write by a single node
+  resources:
+    requests:
+      storage: 5Gi # Request 5 GB of storage
+# You'll also need a PersistentVolume (PV) provisioned by your cluster
+# or a StorageClass for dynamic provisioning.

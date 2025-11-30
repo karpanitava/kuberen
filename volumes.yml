@@ -1,0 +1,19 @@
+---
+apiVersion: v1
+kind: Pod
+metadata: 
+  name: redis-pod
+  labels:
+    author: cicdclouds
+    type: redisserver
+spec:
+  containers:
+    - name: myredisserver
+      image: redis
+      volumeMounts:
+        - name: myvolume
+          mountPath: /data/redis
+  volumes:
+   - name: myvolume
+     emptyDir: {}
+...

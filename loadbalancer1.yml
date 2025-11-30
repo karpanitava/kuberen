@@ -1,0 +1,42 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: weberserver
+  labels:
+    author: cicdclouds
+    app: webapp
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: webapp
+      author: cicdclouds
+  template:
+    metadata:
+      labels:
+        app: webapp
+        author: cicdclouds
+    spec:
+      containers:
+        - name: httpd-server
+          image: httpd:2.4 
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: httpd-server
+  labels:
+    app: webapp
+    author: cicdclouds
+spec:
+  type: LoadBalancer 
+  ports:
+    - targetPort: 80
+      port: 80
+      
+  selector:
+    app: webapp
+    author: cicdclouds
+# If we are using an unmanaged cluster, we can use NodePort
+# If we are using a managed cluster, we can use LoadBalancer
